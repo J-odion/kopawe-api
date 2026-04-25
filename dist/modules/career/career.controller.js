@@ -8,52 +8,90 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CareerController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const career_service_1 = require("./career.service");
-class CreateJobDto {
-    title;
-    company;
-}
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Software Intern' }),
-    __metadata("design:type", String)
-], CreateJobDto.prototype, "title", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Tech Corp' }),
-    __metadata("design:type", String)
-], CreateJobDto.prototype, "company", void 0);
 let CareerController = class CareerController {
     careerService;
     constructor(careerService) {
         this.careerService = careerService;
     }
-    async getJobs() {
-        return [{ id: 1, title: 'Graduate Trainee', company: 'Global Bank' }];
+    async createJob(data) {
+        return this.careerService.createJob(data);
     }
-    async apply() {
-        return { status: 'Application Submitted' };
+    async findAll() {
+        return this.careerService.findAll();
+    }
+    async createCourse(data) {
+        return this.careerService.createCourse(data);
+    }
+    async getCourses(category) {
+        return this.careerService.getCourses(category);
+    }
+    async book(memberId, data) {
+        return this.careerService.bookCounseling(memberId, data);
+    }
+    async getSessions(memberId) {
+        return this.careerService.getSessions(memberId);
     }
 };
 exports.CareerController = CareerController;
 __decorate([
-    (0, common_1.Get)('jobs'),
-    (0, swagger_1.ApiOperation)({ summary: 'List available jobs and internships' }),
+    (0, common_1.Post)('job'),
+    (0, swagger_1.ApiOperation)({ summary: 'Post a new job listing' }),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], CareerController.prototype, "getJobs", null);
+], CareerController.prototype, "createJob", null);
 __decorate([
-    (0, common_1.Post)('apply/:jobId'),
-    (0, swagger_1.ApiOperation)({ summary: 'Apply for a job' }),
+    (0, common_1.Get)('jobs'),
+    (0, swagger_1.ApiOperation)({ summary: 'Find all jobs' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], CareerController.prototype, "apply", null);
+], CareerController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Post)('academy/course'),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a Kopa Academy course/webinar' }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], CareerController.prototype, "createCourse", null);
+__decorate([
+    (0, common_1.Get)('academy/courses'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get academy courses' }),
+    (0, swagger_1.ApiQuery)({ name: 'category', required: false }),
+    __param(0, (0, common_1.Query)('category')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], CareerController.prototype, "getCourses", null);
+__decorate([
+    (0, common_1.Post)('counseling/book/:memberId'),
+    (0, swagger_1.ApiOperation)({ summary: 'Book a counseling session' }),
+    __param(0, (0, common_1.Param)('memberId')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], CareerController.prototype, "book", null);
+__decorate([
+    (0, common_1.Get)('counseling/sessions/:memberId'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get member counseling sessions' }),
+    __param(0, (0, common_1.Param)('memberId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], CareerController.prototype, "getSessions", null);
 exports.CareerController = CareerController = __decorate([
-    (0, swagger_1.ApiTags)('Career & Transitions'),
+    (0, swagger_1.ApiTags)('Career & Academy'),
     (0, common_1.Controller)('career'),
     __metadata("design:paramtypes", [career_service_1.CareerService])
 ], CareerController);

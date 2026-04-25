@@ -17,5 +17,12 @@ export declare class AdminController {
         description: string;
     }): Promise<import("./schemas/ticket.schema").SupportTicket>;
     getTickets(): Promise<import("./schemas/ticket.schema").SupportTicket[]>;
+    getEngagementStats(): Promise<{
+        activeMembers: number;
+        verifiedPercentage: number;
+        totalPosts: number;
+        totalTransfers: number;
+        mostActiveState: string;
+    }>;
 }
 export {};

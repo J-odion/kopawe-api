@@ -21,6 +21,8 @@ let Member = class Member extends mongoose_2.Document {
     lga;
     cdsGroup;
     isVerified;
+    isAdmin;
+    fraudSignals;
     creditScore;
 };
 exports.Member = Member;
@@ -59,6 +61,16 @@ __decorate([
     (0, mongoose_1.Prop)({ default: false }),
     __metadata("design:type", Boolean)
 ], Member.prototype, "isVerified", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, mongoose_1.Prop)({ default: false }),
+    __metadata("design:type", Boolean)
+], Member.prototype, "isAdmin", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, mongoose_1.Prop)({ type: Object }),
+    __metadata("design:type", Object)
+], Member.prototype, "fraudSignals", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, mongoose_1.Prop)({ default: 0 }),

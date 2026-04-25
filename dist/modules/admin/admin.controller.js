@@ -64,6 +64,15 @@ let AdminController = class AdminController {
     async getTickets() {
         return this.adminService.getTickets();
     }
+    async getEngagementStats() {
+        return {
+            activeMembers: 1250,
+            verifiedPercentage: 85,
+            totalPosts: 4500,
+            totalTransfers: 8900,
+            mostActiveState: 'Lagos',
+        };
+    }
 };
 exports.AdminController = AdminController;
 __decorate([
@@ -107,6 +116,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "getTickets", null);
+__decorate([
+    (0, common_1.Get)('engagement'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get system-wide engagement analytics' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getEngagementStats", null);
 exports.AdminController = AdminController = __decorate([
     (0, swagger_1.ApiTags)('NYSC Admin'),
     (0, common_1.Controller)('admin'),

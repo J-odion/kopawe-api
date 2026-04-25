@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { CommunityService } from './community.service';
-import { CommunityPost } from './schemas/post.schema';
+import { CommunityPost, Poll, CommunityEvent } from './schemas/post.schema';
+import { IdentityService } from '../identity/identity.service';
 import { mockModel } from '../../../test/mock-model';
 
 describe('CommunityService', () => {
@@ -14,6 +15,20 @@ describe('CommunityService', () => {
         {
           provide: getModelToken(CommunityPost.name),
           useValue: mockModel,
+        },
+        {
+          provide: getModelToken(Poll.name),
+          useValue: mockModel,
+        },
+        {
+          provide: getModelToken(CommunityEvent.name),
+          useValue: mockModel,
+        },
+        {
+          provide: IdentityService,
+          useValue: {
+            getProfile: jest.fn().mockResolvedValue({ isVerified: true, isAdmin: false }),
+          },
         },
       ],
     }).compile();

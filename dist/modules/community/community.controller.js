@@ -16,65 +16,100 @@ exports.CommunityController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const community_service_1 = require("./community.service");
-const class_validator_1 = require("class-validator");
-class CreatePostDto {
-    content;
-    state;
-    lga;
-    images;
-}
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreatePostDto.prototype, "content", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreatePostDto.prototype, "state", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreatePostDto.prototype, "lga", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ required: false }),
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Array)
-], CreatePostDto.prototype, "images", void 0);
+const post_schema_1 = require("./schemas/post.schema");
 let CommunityController = class CommunityController {
     communityService;
     constructor(communityService) {
         this.communityService = communityService;
     }
-    async create(authorId, dto) {
-        return this.communityService.createPost(authorId, dto);
+    async create(authorId, data) {
+        return this.communityService.createPost(authorId, data);
     }
-    async getFeed(state, lga) {
-        return this.communityService.getRegionalFeed(state, lga);
+    async getFeed(state, category, lga) {
+        return this.communityService.getFeed(state, category, lga);
+    }
+    async addComment(postId, authorId, data) {
+        return this.communityService.createPost(authorId, { ...data, parentId: postId });
+    }
+    async getComments(postId) {
+        return this.communityService.getComments(postId);
+    }
+    async upvote(postId, memberId) {
+        return this.communityService.upvote(postId, memberId);
+    }
+    async createPoll(data) {
+        return this.communityService.createPoll(data);
+    }
+    async rsvp(eventId, memberId) {
+        return this.communityService.rsvpEvent(eventId, memberId);
     }
 };
 exports.CommunityController = CommunityController;
 __decorate([
     (0, common_1.Post)('post/:authorId'),
-    (0, swagger_1.ApiOperation)({ summary: 'Create a new community post' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new post (News, Sports, Religious, etc.)' }),
     __param(0, (0, common_1.Param)('authorId')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, CreatePostDto]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], CommunityController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)('feed'),
-    (0, swagger_1.ApiOperation)({ summary: 'Get regional community feed' }),
+    (0, swagger_1.ApiOperation)({ summary: 'Get state-based regional feed' }),
+    (0, swagger_1.ApiQuery)({ name: 'state', required: false }),
+    (0, swagger_1.ApiQuery)({ name: 'category', enum: post_schema_1.PostCategory, required: false }),
     __param(0, (0, common_1.Query)('state')),
-    __param(1, (0, common_1.Query)('lga')),
+    __param(1, (0, common_1.Query)('category')),
+    __param(2, (0, common_1.Query)('lga')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], CommunityController.prototype, "getFeed", null);
+__decorate([
+    (0, common_1.Post)('comment/:postId/:authorId'),
+    (0, swagger_1.ApiOperation)({ summary: 'Add a comment to a post' }),
+    __param(0, (0, common_1.Param)('postId')),
+    __param(1, (0, common_1.Param)('authorId')),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", Promise)
+], CommunityController.prototype, "addComment", null);
+__decorate([
+    (0, common_1.Get)('comments/:postId'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get comments for a post' }),
+    __param(0, (0, common_1.Param)('postId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], CommunityController.prototype, "getComments", null);
+__decorate([
+    (0, common_1.Patch)('upvote/:postId/:memberId'),
+    (0, swagger_1.ApiOperation)({ summary: 'Upvote a post' }),
+    __param(0, (0, common_1.Param)('postId')),
+    __param(1, (0, common_1.Param)('memberId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
-], CommunityController.prototype, "getFeed", null);
+], CommunityController.prototype, "upvote", null);
+__decorate([
+    (0, common_1.Post)('poll'),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a live poll' }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], CommunityController.prototype, "createPoll", null);
+__decorate([
+    (0, common_1.Post)('rsvp/:eventId/:memberId'),
+    (0, swagger_1.ApiOperation)({ summary: 'RSVP to a Meet & Greet event' }),
+    __param(0, (0, common_1.Param)('eventId')),
+    __param(1, (0, common_1.Param)('memberId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], CommunityController.prototype, "rsvp", null);
 exports.CommunityController = CommunityController = __decorate([
     (0, swagger_1.ApiTags)('Community & Social'),
     (0, common_1.Controller)('community'),

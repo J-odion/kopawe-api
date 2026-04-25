@@ -33,6 +33,14 @@ export class Member extends Document {
   isVerified: boolean;
 
   @ApiProperty()
+  @Prop({ default: false })
+  isAdmin: boolean;
+
+  @ApiProperty()
+  @Prop({ type: Object })
+  fraudSignals: any;
+
+  @ApiProperty()
   @Prop({ default: 0 })
   creditScore: number;
 }

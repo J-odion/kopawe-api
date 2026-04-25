@@ -12,16 +12,23 @@ const mongoose_1 = require("@nestjs/mongoose");
 const community_controller_1 = require("./community.controller");
 const community_service_1 = require("./community.service");
 const post_schema_1 = require("./schemas/post.schema");
+const identity_module_1 = require("../identity/identity.module");
 let CommunityModule = class CommunityModule {
 };
 exports.CommunityModule = CommunityModule;
 exports.CommunityModule = CommunityModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: post_schema_1.CommunityPost.name, schema: post_schema_1.CommunityPostSchema }]),
+            mongoose_1.MongooseModule.forFeature([
+                { name: post_schema_1.CommunityPost.name, schema: post_schema_1.CommunityPostSchema },
+                { name: post_schema_1.Poll.name, schema: post_schema_1.PollSchema },
+                { name: post_schema_1.CommunityEvent.name, schema: post_schema_1.CommunityEventSchema },
+            ]),
+            identity_module_1.IdentityModule,
         ],
         controllers: [community_controller_1.CommunityController],
         providers: [community_service_1.CommunityService],
+        exports: [community_service_1.CommunityService],
     })
 ], CommunityModule);
 //# sourceMappingURL=community.module.js.map

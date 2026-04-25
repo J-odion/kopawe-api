@@ -7,6 +7,8 @@ export declare class Member extends Document {
     lga: string;
     cdsGroup: string;
     isVerified: boolean;
+    isAdmin: boolean;
+    fraudSignals: any;
     creditScore: number;
 }
 export declare const MemberSchema: import("mongoose").Schema<Member, import("mongoose").Model<Member, any, any, any, any, any, Member>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Member, Document<unknown, {}, Member, {
@@ -18,7 +20,7 @@ export declare const MemberSchema: import("mongoose").Schema<Member, import("mon
 }, "id"> & {
     id: string;
 }, {
-    callUpNumber?: import("mongoose").SchemaDefinitionProperty<string, Member, Document<unknown, {}, Member, {
+    _id?: import("mongoose").SchemaDefinitionProperty<import("mongoose").Types.ObjectId, Member, Document<unknown, {}, Member, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Member & Required<{
         _id: import("mongoose").Types.ObjectId;
@@ -27,7 +29,7 @@ export declare const MemberSchema: import("mongoose").Schema<Member, import("mon
     }, "id"> & {
         id: string;
     }> | undefined;
-    _id?: import("mongoose").SchemaDefinitionProperty<import("mongoose").Types.ObjectId, Member, Document<unknown, {}, Member, {
+    callUpNumber?: import("mongoose").SchemaDefinitionProperty<string, Member, Document<unknown, {}, Member, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Member & Required<{
         _id: import("mongoose").Types.ObjectId;
@@ -82,6 +84,24 @@ export declare const MemberSchema: import("mongoose").Schema<Member, import("mon
         id: string;
     }> | undefined;
     isVerified?: import("mongoose").SchemaDefinitionProperty<boolean, Member, Document<unknown, {}, Member, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Member & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    isAdmin?: import("mongoose").SchemaDefinitionProperty<boolean, Member, Document<unknown, {}, Member, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Member & Required<{
+        _id: import("mongoose").Types.ObjectId;
+    }> & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    fraudSignals?: import("mongoose").SchemaDefinitionProperty<any, Member, Document<unknown, {}, Member, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Member & Required<{
         _id: import("mongoose").Types.ObjectId;

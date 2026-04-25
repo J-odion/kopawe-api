@@ -1,8 +1,16 @@
 import { Model } from 'mongoose';
-import { CommunityPost } from './schemas/post.schema';
+import { CommunityPost, Poll, CommunityEvent } from './schemas/post.schema';
+import { IdentityService } from '../identity/identity.service';
 export declare class CommunityService {
     private postModel;
-    constructor(postModel: Model<CommunityPost>);
+    private pollModel;
+    private eventModel;
+    private identityService;
+    constructor(postModel: Model<CommunityPost>, pollModel: Model<Poll>, eventModel: Model<CommunityEvent>, identityService: IdentityService);
     createPost(authorId: string, data: any): Promise<CommunityPost>;
-    getRegionalFeed(state: string, lga?: string): Promise<CommunityPost[]>;
+    getFeed(state?: string, category?: string, lga?: string): Promise<CommunityPost[]>;
+    getComments(postId: string): Promise<CommunityPost[]>;
+    upvote(postId: string, memberId: string): Promise<void>;
+    createPoll(data: any): Promise<Poll>;
+    rsvpEvent(eventId: string, memberId: string): Promise<void>;
 }

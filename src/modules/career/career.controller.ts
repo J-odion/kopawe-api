@@ -1,28 +1,46 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiProperty } from '@nestjs/swagger';
+import { Controller, Post, Get, Body, Param, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { CareerService } from './career.service';
 
-class CreateJobDto {
-  @ApiProperty({ example: 'Software Intern' })
-  title: string;
-  @ApiProperty({ example: 'Tech Corp' })
-  company: string;
-}
-
-@ApiTags('Career & Transitions')
+@ApiTags('Career & Academy')
 @Controller('career')
 export class CareerController {
   constructor(private readonly careerService: CareerService) {}
 
-  @Get('jobs')
-  @ApiOperation({ summary: 'List available jobs and internships' })
-  async getJobs() {
-    return [{ id: 1, title: 'Graduate Trainee', company: 'Global Bank' }];
+  @Post('job')
+  @ApiOperation({ summary: 'Post a new job listing' })
+  async createJob(@Body() data: any) {
+    return this.careerService.createJob(data);
   }
 
-  @Post('apply/:jobId')
-  @ApiOperation({ summary: 'Apply for a job' })
-  async apply() {
-    return { status: 'Application Submitted' };
+  @Get('jobs')
+  @ApiOperation({ summary: 'Find all jobs' })
+  async findAll() {
+    return this.careerService.findAll();
+  }
+
+  @Post('academy/course')
+  @ApiOperation({ summary: 'Create a Kopa Academy course/webinar' })
+  async createCourse(@Body() data: any) {
+    return this.careerService.createCourse(data);
+  }
+
+  @Get('academy/courses')
+  @ApiOperation({ summary: 'Get academy courses' })
+  @ApiQuery({ name: 'category', required: false })
+  async getCourses(@Query('category') category?: string) {
+    return this.careerService.getCourses(category);
+  }
+
+  @Post('counseling/book/:memberId')
+  @ApiOperation({ summary: 'Book a counseling session' })
+  async book(@Param('memberId') memberId: string, @Body() data: any) {
+    return this.careerService.bookCounseling(memberId, data);
+  }
+
+  @Get('counseling/sessions/:memberId')
+  @ApiOperation({ summary: 'Get member counseling sessions' })
+  async getSessions(@Param('memberId') memberId: string) {
+    return this.careerService.getSessions(memberId);
   }
 }

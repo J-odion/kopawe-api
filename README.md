@@ -17,6 +17,20 @@
 - **Fintech-grade Ledger**: A double-entry accounting system that ensures your funds are always safe and audited.
 - **Savings & CDS Groups**: Individual savings and collaborative "Ajo" style savings for CDS groups.
 
+### 11. News & Social Engine
+- **Categories**: News, Sports, Religious, Programs, and Counseling.
+- **Verification-Gated Content**: Only admins for official news, only verified members for trusted reports.
+- **Threaded Discussions**: Nested comments and upvote-based relevance ranking.
+- **State-Based Feeds**: Automatic filtering for state and local government area (LGA) content.
+
+### 12. Community & Engagement
+- **Live Polls**: Real-time policy testing and feedback loops.
+- **Meet & Greet**: RSVP system for state and CDS events.
+
+### 13. Kopa Academy & Counseling
+- **Structured Training**: Tech, Business, and Entrepreneurship courses/webinars.
+- **Counseling Portal**: Career, Relationship, and Mental Health session booking.
+
 ### 🏠 3. Accommodation & Relocation
 - **Roommate Finder**: Match with other verified corps members based on location and preferences.
 - **Housing Marketplace**: Browse verified landlord listings and secure apartments via escrow.
