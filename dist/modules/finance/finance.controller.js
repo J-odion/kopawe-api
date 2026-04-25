@@ -25,12 +25,18 @@ class RequestLoanDto {
     purpose;
 }
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 50000 }),
+    (0, swagger_1.ApiProperty)({
+        description: 'Loan amount requested (₦1k - ₦100k)',
+        example: 50000
+    }),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], RequestLoanDto.prototype, "amount", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Transport to PPA' }),
+    (0, swagger_1.ApiProperty)({
+        description: 'The reason for the loan request',
+        example: 'Transport to PPA'
+    }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], RequestLoanDto.prototype, "purpose", void 0);
@@ -40,17 +46,26 @@ class TransferDto {
     description;
 }
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'recipient-member-id' }),
+    (0, swagger_1.ApiProperty)({
+        description: 'The unique ID of the recipient member',
+        example: '662a5b...'
+    }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], TransferDto.prototype, "toMemberId", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 5000 }),
+    (0, swagger_1.ApiProperty)({
+        description: 'Amount to transfer',
+        example: 5000
+    }),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], TransferDto.prototype, "amount", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Dinner at CDS' }),
+    (0, swagger_1.ApiProperty)({
+        description: 'Transaction description',
+        example: 'Dinner at CDS'
+    }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], TransferDto.prototype, "description", void 0);

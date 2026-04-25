@@ -24,17 +24,26 @@ class CreateEscrowDto {
     amount;
 }
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'The unique ID of the product being purchased',
+        example: '662a5b...'
+    }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateEscrowDto.prototype, "productId", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'The unique ID of the seller',
+        example: '662a5b...'
+    }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateEscrowDto.prototype, "sellerId", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({
+        description: 'The agreed price to be held in escrow',
+        example: 15000
+    }),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateEscrowDto.prototype, "amount", void 0);

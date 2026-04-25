@@ -18,13 +18,19 @@ class VerifyMemberDto {
 }
 exports.VerifyMemberDto = VerifyMemberDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'NYSC/ABC/2024/123456' }),
+    (0, swagger_1.ApiProperty)({
+        description: 'Official NYSC Call-up number',
+        example: 'NYSC/ABC/2024/123456'
+    }),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], VerifyMemberDto.prototype, "callUpNumber", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'LA/24A/1234' }),
+    (0, swagger_1.ApiProperty)({
+        description: 'Assigned State Code',
+        example: 'LA/24A/1234'
+    }),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
