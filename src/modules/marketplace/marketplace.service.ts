@@ -16,7 +16,28 @@ export class MarketplaceService {
   }
 
   async findAll(query: any): Promise<Product[]> {
-    return this.productModel.find({ status: 'AVAILABLE', ...query }).exec();
+    const { search, category, minPrice, maxPrice, ...rest } = query;
+    const filter: any = { status: 'AVAILABLE', ...rest };
+
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (category) filter.category = category;
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    return this.productModel.find(filter).exec();
+  }
+
+  async findByMember(memberId: string): Promise<Product[]> {
+    return this.productModel.find({ sellerId: new Types.ObjectId(memberId) }).exec();
   }
 
   async findOne(id: string): Promise<Product> {

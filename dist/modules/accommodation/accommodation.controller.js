@@ -52,8 +52,11 @@ let AccommodationController = class AccommodationController {
     async create(ownerId, dto) {
         return this.accommodationService.createListing(ownerId, dto);
     }
-    async findAll(location) {
-        return this.accommodationService.findAll(location ? { location } : {});
+    async findAll(query) {
+        return this.accommodationService.findAll(query);
+    }
+    async findByMember(memberId) {
+        return this.accommodationService.findByMember(memberId);
     }
     async findRoommates(location) {
         return this.accommodationService.findRoommates(location);
@@ -71,14 +74,26 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AccommodationController.prototype, "create", null);
 __decorate([
-    (0, common_1.Get)('search'),
-    (0, swagger_1.ApiOperation)({ summary: 'Search for accommodations' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: 'List of accommodations', type: [accommodation_schema_1.Accommodation] }),
-    __param(0, (0, common_1.Query)('location')),
+    (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Search and filter accommodations' }),
+    (0, swagger_1.ApiQuery)({ name: 'search', required: false, description: 'Search title or location' }),
+    (0, swagger_1.ApiQuery)({ name: 'minPrice', required: false, type: Number }),
+    (0, swagger_1.ApiQuery)({ name: 'maxPrice', required: false, type: Number }),
+    (0, swagger_1.ApiQuery)({ name: 'roommateWanted', required: false, type: Boolean }),
+    (0, swagger_1.ApiResponse)({ status: 200, type: [accommodation_schema_1.Accommodation] }),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AccommodationController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('member/:memberId'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all accommodations listed by a member' }),
+    __param(0, (0, common_1.Param)('memberId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], AccommodationController.prototype, "findAll", null);
+], AccommodationController.prototype, "findByMember", null);
 __decorate([
     (0, common_1.Get)('roommates'),
     (0, swagger_1.ApiOperation)({ summary: 'Find roommate listings' }),

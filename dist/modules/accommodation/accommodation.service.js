@@ -23,14 +23,35 @@ let AccommodationService = class AccommodationService {
         this.accommodationModel = accommodationModel;
     }
     async createListing(ownerId, data) {
-        const accommodation = new this.accommodationModel({
+        const listing = new this.accommodationModel({
             ...data,
             ownerId: new mongoose_2.Types.ObjectId(ownerId),
         });
-        return accommodation.save();
+        return listing.save();
     }
     async findAll(query) {
-        return this.accommodationModel.find({ status: 'AVAILABLE', ...query }).exec();
+        const { search, minPrice, maxPrice, roommateWanted, ...rest } = query;
+        const filter = { ...rest };
+        if (search) {
+            filter.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { location: { $regex: search, $options: 'i' } },
+            ];
+        }
+        if (roommateWanted !== undefined) {
+            filter.roommateWanted = roommateWanted === 'true';
+        }
+        if (minPrice || maxPrice) {
+            filter.price = {};
+            if (minPrice)
+                filter.price.$gte = Number(minPrice);
+            if (maxPrice)
+                filter.price.$lte = Number(maxPrice);
+        }
+        return this.accommodationModel.find(filter).exec();
+    }
+    async findByMember(memberId) {
+        return this.accommodationModel.find({ ownerId: new mongoose_2.Types.ObjectId(memberId) }).exec();
     }
     async findRoommates(location) {
         return this.accommodationModel.find({

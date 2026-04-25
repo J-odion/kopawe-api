@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiProperty } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiQuery } from '@nestjs/swagger';
 import { AccommodationService } from './accommodation.service';
 import { Accommodation } from './schemas/accommodation.schema';
 import { IsString, IsNumber, IsBoolean, IsOptional } from 'class-validator';
@@ -34,11 +34,21 @@ export class AccommodationController {
     return this.accommodationService.createListing(ownerId, dto);
   }
 
-  @Get('search')
-  @ApiOperation({ summary: 'Search for accommodations' })
-  @ApiResponse({ status: 200, description: 'List of accommodations', type: [Accommodation] })
-  async findAll(@Query('location') location?: string) {
-    return this.accommodationService.findAll(location ? { location } : {});
+  @Get()
+  @ApiOperation({ summary: 'Search and filter accommodations' })
+  @ApiQuery({ name: 'search', required: false, description: 'Search title or location' })
+  @ApiQuery({ name: 'minPrice', required: false, type: Number })
+  @ApiQuery({ name: 'maxPrice', required: false, type: Number })
+  @ApiQuery({ name: 'roommateWanted', required: false, type: Boolean })
+  @ApiResponse({ status: 200, type: [Accommodation] })
+  async findAll(@Query() query: any) {
+    return this.accommodationService.findAll(query);
+  }
+
+  @Get('member/:memberId')
+  @ApiOperation({ summary: 'Get all accommodations listed by a member' })
+  async findByMember(@Param('memberId') memberId: string) {
+    return this.accommodationService.findByMember(memberId);
   }
 
   @Get('roommates')

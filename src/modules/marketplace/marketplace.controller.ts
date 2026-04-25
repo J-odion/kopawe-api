@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, Query, Patch } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiProperty } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiQuery } from '@nestjs/swagger';
 import { MarketplaceService } from './marketplace.service';
 import { Product } from './schemas/marketplace.schema';
 import { IsString, IsNumber, IsOptional } from 'class-validator';
@@ -34,11 +34,21 @@ export class MarketplaceController {
     return this.marketplaceService.createListing(sellerId, dto);
   }
 
-  @Get('search')
-  @ApiOperation({ summary: 'Search for products' })
+  @Get()
+  @ApiOperation({ summary: 'Search and filter marketplace products' })
+  @ApiQuery({ name: 'search', required: false, description: 'Keyword search for title/description' })
+  @ApiQuery({ name: 'category', required: false })
+  @ApiQuery({ name: 'minPrice', required: false, type: Number })
+  @ApiQuery({ name: 'maxPrice', required: false, type: Number })
   @ApiResponse({ status: 200, description: 'List of products', type: [Product] })
-  async findAll(@Query('category') category?: string) {
-    return this.marketplaceService.findAll(category ? { category } : {});
+  async findAll(@Query() query: any) {
+    return this.marketplaceService.findAll(query);
+  }
+
+  @Get('member/:memberId')
+  @ApiOperation({ summary: 'Get all listings by a specific member' })
+  async findByMember(@Param('memberId') memberId: string) {
+    return this.marketplaceService.findByMember(memberId);
   }
 
   @Get(':id')

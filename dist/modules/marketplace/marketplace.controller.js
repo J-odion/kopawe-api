@@ -52,8 +52,11 @@ let MarketplaceController = class MarketplaceController {
     async create(sellerId, dto) {
         return this.marketplaceService.createListing(sellerId, dto);
     }
-    async findAll(category) {
-        return this.marketplaceService.findAll(category ? { category } : {});
+    async findAll(query) {
+        return this.marketplaceService.findAll(query);
+    }
+    async findByMember(memberId) {
+        return this.marketplaceService.findByMember(memberId);
     }
     async findOne(id) {
         return this.marketplaceService.findOne(id);
@@ -74,14 +77,26 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], MarketplaceController.prototype, "create", null);
 __decorate([
-    (0, common_1.Get)('search'),
-    (0, swagger_1.ApiOperation)({ summary: 'Search for products' }),
+    (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: 'Search and filter marketplace products' }),
+    (0, swagger_1.ApiQuery)({ name: 'search', required: false, description: 'Keyword search for title/description' }),
+    (0, swagger_1.ApiQuery)({ name: 'category', required: false }),
+    (0, swagger_1.ApiQuery)({ name: 'minPrice', required: false, type: Number }),
+    (0, swagger_1.ApiQuery)({ name: 'maxPrice', required: false, type: Number }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of products', type: [marketplace_schema_1.Product] }),
-    __param(0, (0, common_1.Query)('category')),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], MarketplaceController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('member/:memberId'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all listings by a specific member' }),
+    __param(0, (0, common_1.Param)('memberId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], MarketplaceController.prototype, "findAll", null);
+], MarketplaceController.prototype, "findByMember", null);
 __decorate([
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiOperation)({ summary: 'Get product details' }),

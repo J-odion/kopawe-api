@@ -10,7 +10,8 @@ export declare class MarketplaceController {
     private readonly marketplaceService;
     constructor(marketplaceService: MarketplaceService);
     create(sellerId: string, dto: CreateProductDto): Promise<Product>;
-    findAll(category?: string): Promise<Product[]>;
+    findAll(query: any): Promise<Product[]>;
+    findByMember(memberId: string): Promise<Product[]>;
     findOne(id: string): Promise<Product>;
     updateLogistics(id: string, dto: {
         status: string;
