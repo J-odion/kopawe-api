@@ -48,8 +48,8 @@
    Create a `.env` file based on the provided template:
    ```env
    PORT=3000
-   MONGODB_URI=mongodb://localhost:27017/kopa-we
-   JWT_SECRET=your-secret-key
+   MONGODB_URI=
+   JWT_SECRET=
    ```
 
 3. **Install Dependencies**:
