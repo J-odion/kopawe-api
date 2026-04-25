@@ -1,98 +1,93 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# KOPA WE - Digital Ecosystem for NYSC Members
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+**KOPA WE** is the official digital infrastructure designed to improve the lives of National Youth Service Corps (NYSC) members and support NYSC operations. It combines financial services, housing, commerce, and community into one trusted, verified platform.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🚀 Core Modules & Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 🔐 1. Identity & Verification (The Trust Layer)
+- **Digital Corps ID**: A verified digital identity generated after authenticating with NYSC records.
+- **Instant Verification**: Integration with NYSC database using Call-up numbers and State codes.
+- **Fraud Protection**: A secure layer that ensures only genuine corps members access the ecosystem.
 
-## Project setup
+### 💰 2. Qreva Core (Finance)
+- **Smart Wallet**: Manage your allowance, P2P transfers, and bill payments seamlessly.
+- **Allawee Advance (Micro-Loans)**: Get instant loans between ₦1,000 – ₦100,000 based on your NYSC stipend cycle.
+- **Fintech-grade Ledger**: A double-entry accounting system that ensures your funds are always safe and audited.
+- **Savings & CDS Groups**: Individual savings and collaborative "Ajo" style savings for CDS groups.
 
-```bash
-$ npm install
-```
+### 🏠 3. Accommodation & Relocation
+- **Roommate Finder**: Match with other verified corps members based on location and preferences.
+- **Housing Marketplace**: Browse verified landlord listings and secure apartments via escrow.
+- **Rent Escrow**: Pay your rent through Safetrade to ensure your money is only released when you move in.
 
-## Compile and run the project
+### 🛒 4. Marketplace & Declutter
+- **Corps-owned Businesses**: Support fellow corpers by buying from their businesses.
+- **Declutter Section**: Sell your used items (beds, fans, etc.) easily to incoming members.
+- **Safetrade (Escrow)**: Our proprietary engine that holds payments until delivery is confirmed by the buyer.
 
-```bash
-# development
-$ npm run start
+### 🧑💼 5. NYSC Admin Dashboard
+- **Broadcast System**: Real-time announcements from NYSC officials to specific States or LGAs.
+- **Welfare Monitoring**: Track and support corps welfare issues through a centralized dashboard.
+- **Digital Transformation**: Automating verification and communication for thousands of members.
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
-```
+## 🛠 Technical Walkthrough
 
-## Run tests
+### Getting Started
 
-```bash
-# unit tests
-$ npm run test
+1. **Clone the repository**:
+   ```bash
+   git clone <repo-url>
+   cd kopa-we-api
+   ```
 
-# e2e tests
-$ npm run test:e2e
+2. **Setup Environment**:
+   Create a `.env` file based on the provided template:
+   ```env
+   PORT=3000
+   MONGODB_URI=mongodb://localhost:27017/kopa-we
+   JWT_SECRET=your-secret-key
+   ```
 
-# test coverage
-$ npm run test:cov
-```
+3. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-## Deployment
+4. **Run the Application**:
+   ```bash
+   npm run start:dev
+   ```
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### API Documentation (Swagger)
+The interactive API documentation is available at:
+👉 `http://localhost:3000/api/docs`
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+---
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+## 🧪 Testing
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+We use Jest for unit and end-to-end testing.
 
-## Resources
+- **Run E2E Tests**:
+  ```bash
+  npm run test:e2e
+  ```
+- **Run Unit Tests**:
+  ```bash
+  npm run test
+  ```
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 🛡 Security & Compliance
+- **Data Privacy**: Fully compliant with NDPC regulations.
+- **Escrow Enforcement**: All marketplace transactions are protected by Safetrade.
+- **Verification**: Mandatory NYSC identity check for all financial operations.
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Built with ❤️ by **Qreva Team** for the **National Youth Service Corps**.

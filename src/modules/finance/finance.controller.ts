@@ -7,25 +7,40 @@ import { LedgerEntry, TransactionType } from './schemas/ledger.schema';
 import { IsNumber, IsString } from 'class-validator';
 
 class RequestLoanDto {
-  @ApiProperty({ example: 50000 })
+  @ApiProperty({ 
+    description: 'Loan amount requested (₦1k - ₦100k)',
+    example: 50000 
+  })
   @IsNumber()
   amount: number;
 
-  @ApiProperty({ example: 'Transport to PPA' })
+  @ApiProperty({ 
+    description: 'The reason for the loan request',
+    example: 'Transport to PPA' 
+  })
   @IsString()
   purpose: string;
 }
 
 class TransferDto {
-  @ApiProperty({ example: 'recipient-member-id' })
+  @ApiProperty({ 
+    description: 'The unique ID of the recipient member',
+    example: '662a5b...' 
+  })
   @IsString()
   toMemberId: string;
 
-  @ApiProperty({ example: 5000 })
+  @ApiProperty({ 
+    description: 'Amount to transfer',
+    example: 5000 
+  })
   @IsNumber()
   amount: number;
 
-  @ApiProperty({ example: 'Dinner at CDS' })
+  @ApiProperty({ 
+    description: 'Transaction description',
+    example: 'Dinner at CDS' 
+  })
   @IsString()
   description: string;
 }

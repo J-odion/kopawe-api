@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MarketplaceController } from './marketplace.controller';
+import { MarketplaceService } from './marketplace.service';
 
 describe('MarketplaceController', () => {
   let controller: MarketplaceController;
@@ -7,6 +8,17 @@ describe('MarketplaceController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MarketplaceController],
+      providers: [
+        {
+          provide: MarketplaceService,
+          useValue: {
+            createListing: jest.fn(),
+            findAll: jest.fn(),
+            findOne: jest.fn(),
+            updateLogistics: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<MarketplaceController>(MarketplaceController);

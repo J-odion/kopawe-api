@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { IdentityController } from './identity.controller';
+import { IdentityService } from './identity.service';
 
 describe('IdentityController', () => {
   let controller: IdentityController;
@@ -7,6 +8,16 @@ describe('IdentityController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [IdentityController],
+      providers: [
+        {
+          provide: IdentityService,
+          useValue: {
+            verifyMember: jest.fn(),
+            getProfile: jest.fn(),
+            generateDigitalID: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<IdentityController>(IdentityController);

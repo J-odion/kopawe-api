@@ -5,15 +5,24 @@ import { EscrowTransaction } from '../marketplace/schemas/marketplace.schema';
 import { IsString, IsNumber } from 'class-validator';
 
 class CreateEscrowDto {
-  @ApiProperty()
+  @ApiProperty({ 
+    description: 'The unique ID of the product being purchased',
+    example: '662a5b...' 
+  })
   @IsString()
   productId: string;
 
-  @ApiProperty()
+  @ApiProperty({ 
+    description: 'The unique ID of the seller',
+    example: '662a5b...' 
+  })
   @IsString()
   sellerId: string;
 
-  @ApiProperty()
+  @ApiProperty({ 
+    description: 'The agreed price to be held in escrow',
+    example: 15000 
+  })
   @IsNumber()
   amount: number;
 }
