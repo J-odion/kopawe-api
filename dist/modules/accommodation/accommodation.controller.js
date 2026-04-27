@@ -18,6 +18,8 @@ const swagger_1 = require("@nestjs/swagger");
 const accommodation_service_1 = require("./accommodation.service");
 const accommodation_schema_1 = require("./schemas/accommodation.schema");
 const class_validator_1 = require("class-validator");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
 class CreateAccommodationDto {
     title;
     location;
@@ -64,10 +66,12 @@ let AccommodationController = class AccommodationController {
 };
 exports.AccommodationController = AccommodationController;
 __decorate([
-    (0, common_1.Post)('list/:ownerId'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Post)('list'),
     (0, swagger_1.ApiOperation)({ summary: 'List a new accommodation' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Accommodation listed', type: accommodation_schema_1.Accommodation }),
-    __param(0, (0, common_1.Param)('ownerId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, CreateAccommodationDto]),
@@ -87,9 +91,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AccommodationController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)('member/:memberId'),
-    (0, swagger_1.ApiOperation)({ summary: 'Get all accommodations listed by a member' }),
-    __param(0, (0, common_1.Param)('memberId')),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('member'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all accommodations listed by the current member' }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)

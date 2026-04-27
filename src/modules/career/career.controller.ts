@@ -1,6 +1,8 @@
-import { Controller, Post, Get, Body, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { Controller, Post, Get, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { CareerService } from './career.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 @ApiTags('Career & Academy')
 @Controller('career')
@@ -15,8 +17,10 @@ export class CareerController {
 
   @Get('jobs')
   @ApiOperation({ summary: 'Find all jobs' })
-  async findAll() {
-    return this.careerService.findAll();
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  async findAll(@Query() query: any) {
+    return this.careerService.findAll(query);
   }
 
   @Post('academy/course')
@@ -32,15 +36,19 @@ export class CareerController {
     return this.careerService.getCourses(category);
   }
 
-  @Post('counseling/book/:memberId')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Post('counseling/book')
   @ApiOperation({ summary: 'Book a counseling session' })
-  async book(@Param('memberId') memberId: string, @Body() data: any) {
+  async book(@CurrentUser('id') memberId: string, @Body() data: any) {
     return this.careerService.bookCounseling(memberId, data);
   }
 
-  @Get('counseling/sessions/:memberId')
-  @ApiOperation({ summary: 'Get member counseling sessions' })
-  async getSessions(@Param('memberId') memberId: string) {
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('counseling/sessions')
+  @ApiOperation({ summary: 'Get current member counseling sessions' })
+  async getSessions(@CurrentUser('id') memberId: string) {
     return this.careerService.getSessions(memberId);
   }
 }

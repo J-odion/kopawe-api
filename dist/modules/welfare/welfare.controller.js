@@ -18,6 +18,8 @@ const swagger_1 = require("@nestjs/swagger");
 const welfare_service_1 = require("./welfare.service");
 const welfare_schema_1 = require("./schemas/welfare.schema");
 const class_validator_1 = require("class-validator");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
 class CreateWelfareRequestDto {
     amount;
     reason;
@@ -54,10 +56,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], WelfareController.prototype, "getStatus", null);
 __decorate([
-    (0, common_1.Post)('request/:memberId'),
+    (0, common_1.Post)('request'),
     (0, swagger_1.ApiOperation)({ summary: 'Request financial support from the Welfare Fund' }),
     (0, swagger_1.ApiResponse)({ status: 201, type: welfare_schema_1.WelfareRequest }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, CreateWelfareRequestDto]),
@@ -65,6 +67,8 @@ __decorate([
 ], WelfareController.prototype, "createRequest", null);
 exports.WelfareController = WelfareController = __decorate([
     (0, swagger_1.ApiTags)('Welfare Fund'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('welfare'),
     __metadata("design:paramtypes", [welfare_service_1.WelfareService])
 ], WelfareController);

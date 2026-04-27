@@ -16,6 +16,8 @@ exports.CareerController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const career_service_1 = require("./career.service");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
 let CareerController = class CareerController {
     careerService;
     constructor(careerService) {
@@ -24,8 +26,8 @@ let CareerController = class CareerController {
     async createJob(data) {
         return this.careerService.createJob(data);
     }
-    async findAll() {
-        return this.careerService.findAll();
+    async findAll(query) {
+        return this.careerService.findAll(query);
     }
     async createCourse(data) {
         return this.careerService.createCourse(data);
@@ -52,8 +54,11 @@ __decorate([
 __decorate([
     (0, common_1.Get)('jobs'),
     (0, swagger_1.ApiOperation)({ summary: 'Find all jobs' }),
+    (0, swagger_1.ApiQuery)({ name: 'page', required: false, type: Number }),
+    (0, swagger_1.ApiQuery)({ name: 'limit', required: false, type: Number }),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], CareerController.prototype, "findAll", null);
 __decorate([
@@ -74,18 +79,22 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CareerController.prototype, "getCourses", null);
 __decorate([
-    (0, common_1.Post)('counseling/book/:memberId'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Post)('counseling/book'),
     (0, swagger_1.ApiOperation)({ summary: 'Book a counseling session' }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], CareerController.prototype, "book", null);
 __decorate([
-    (0, common_1.Get)('counseling/sessions/:memberId'),
-    (0, swagger_1.ApiOperation)({ summary: 'Get member counseling sessions' }),
-    __param(0, (0, common_1.Param)('memberId')),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('counseling/sessions'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get current member counseling sessions' }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)

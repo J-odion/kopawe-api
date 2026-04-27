@@ -17,8 +17,25 @@ export class CareerService {
     return job.save();
   }
 
-  async findAll(): Promise<Job[]> {
-    return this.jobModel.find().exec();
+  async findAll(query: any = {}): Promise<{ data: Job[]; meta: any }> {
+    const { page = 1, limit = 20, ...rest } = query;
+    const filter = { status: 'OPEN', ...rest };
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const [data, total] = await Promise.all([
+      this.jobModel.find(filter).skip(skip).limit(Number(limit)).exec(),
+      this.jobModel.countDocuments(filter),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page: Number(page),
+        lastPage: Math.ceil(total / Number(limit)),
+        limit: Number(limit),
+      },
+    };
   }
 
   // Kopa Academy

@@ -15,8 +15,8 @@ export class MarketplaceService {
     return product.save();
   }
 
-  async findAll(query: any): Promise<Product[]> {
-    const { search, category, minPrice, maxPrice, ...rest } = query;
+  async findAll(query: any): Promise<{ data: Product[]; meta: any }> {
+    const { search, category, minPrice, maxPrice, page = 1, limit = 20, ...rest } = query;
     const filter: any = { status: 'AVAILABLE', ...rest };
 
     if (search) {
@@ -33,7 +33,21 @@ export class MarketplaceService {
       if (maxPrice) filter.price.$lte = Number(maxPrice);
     }
 
-    return this.productModel.find(filter).exec();
+    const skip = (Number(page) - 1) * Number(limit);
+    const [data, total] = await Promise.all([
+      this.productModel.find(filter).skip(skip).limit(Number(limit)).exec(),
+      this.productModel.countDocuments(filter),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page: Number(page),
+        lastPage: Math.ceil(total / Number(limit)),
+        limit: Number(limit),
+      },
+    };
   }
 
   async findByMember(memberId: string): Promise<Product[]> {

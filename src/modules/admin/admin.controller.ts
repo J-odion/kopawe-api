@@ -1,8 +1,10 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiProperty } from '@nestjs/swagger';
+import { Controller, Post, Get, Body, Param, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiBearerAuth } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { Announcement } from './schemas/announcement.schema';
 import { IsString } from 'class-validator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 class CreateAnnouncementDto {
   @ApiProperty({ example: 'NYSC Pop-up Event' })
@@ -23,6 +25,8 @@ class CreateAnnouncementDto {
 }
 
 @ApiTags('NYSC Admin')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
@@ -48,9 +52,9 @@ export class AdminController {
     return this.adminService.getSystemStats();
   }
 
-  @Post('tickets/:memberId')
+  @Post('tickets')
   @ApiOperation({ summary: 'Create a new support ticket/complaint' })
-  async createTicket(@Param('memberId') id: string, @Body() dto: { subject: string; description: string }) {
+  async createTicket(@CurrentUser('id') id: string, @Body() dto: { subject: string; description: string }) {
     return this.adminService.createTicket(id, dto);
   }
 

@@ -7,7 +7,10 @@ export declare class CareerService {
     private counselingModel;
     constructor(jobModel: Model<Job>, academyModel: Model<AcademyCourse>, counselingModel: Model<CounselingSession>);
     createJob(data: any): Promise<Job>;
-    findAll(): Promise<Job[]>;
+    findAll(query?: any): Promise<{
+        data: Job[];
+        meta: any;
+    }>;
     createCourse(data: any): Promise<AcademyCourse>;
     getCourses(category?: string): Promise<AcademyCourse[]>;
     bookCounseling(memberId: string, data: any): Promise<CounselingSession>;

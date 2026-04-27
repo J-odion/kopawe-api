@@ -1,107 +1,90 @@
-# KOPA WE - Digital Ecosystem for NYSC Members
+# Kopa We - NYSC Unified Digital Ecosystem
 
-**KOPA WE** is the official digital infrastructure designed to improve the lives of National Youth Service Corps (NYSC) members and support NYSC operations. It combines financial services, housing, commerce, and community into one trusted, verified platform.
+Welcome to the **Kopa We API**, the production-grade backend infrastructure for the unified NYSC digital ecosystem. This platform transitions the NYSC experience into a secure, scalable, and feature-rich digital environment.
 
----
+## 🚀 Key Features & Modules
 
-## 🚀 Core Modules & Features
+### 1. Identity & Verification (`/api/identity`)
+*   **Verification Engine**: Validates corp members using their official `callUpNumber` and `stateCode`.
+*   **Profile Management**: Stores member details including PPA, clearance status, and verification badges.
 
-### 🔐 1. Identity & Verification (The Trust Layer)
-- **Digital Corps ID**: A verified digital identity generated after authenticating with NYSC records.
-- **Instant Verification**: Integration with NYSC database using Call-up numbers and State codes.
-- **Fraud Protection**: A secure layer that ensures only genuine corps members access the ecosystem.
+### 2. Authentication & Security (`/api/auth`)
+*   **Secure Access**: Uses robust **JWT-based Authentication** via Passport.js.
+*   **Token Lifecycle**: Issue Bearer tokens upon successful registration or login to protect sensitive API endpoints and prevent IDOR (Insecure Direct Object Reference) vulnerabilities.
 
-### 💰 2. Qreva Core (Finance)
-- **Smart Wallet**: Manage your allowance, P2P transfers, and bill payments seamlessly.
-- **Allawee Advance (Micro-Loans)**: Get instant loans between ₦1,000 – ₦100,000 based on your NYSC stipend cycle.
-- **Fintech-grade Ledger**: A double-entry accounting system that ensures your funds are always safe and audited.
-- **Savings & CDS Groups**: Individual savings and collaborative "Ajo" style savings for CDS groups.
+### 3. Community & Social Engine (`/api/community`)
+*   **State-Based Feeds**: View updates, news, and events filtered by State and LGA.
+*   **Engagement**: Support for nested comments, upvoting, live polls, and event RSVPs.
+*   **Content Moderation**: Strict role checks ensure official announcements are restricted to admins.
 
-### 11. News & Social Engine
-- **Categories**: News, Sports, Religious, Programs, and Counseling.
-- **Verification-Gated Content**: Only admins for official news, only verified members for trusted reports.
-- **Threaded Discussions**: Nested comments and upvote-based relevance ranking.
-- **State-Based Feeds**: Automatic filtering for state and local government area (LGA) content.
+### 4. Marketplace & Safetrade (`/api/marketplace` & `/api/safetrade`)
+*   **P2P Commerce**: Corp members can list items for sale (e.g., camp items, furniture).
+*   **Escrow System (Safetrade)**: Protects buyers and sellers by holding funds in escrow until item delivery is confirmed.
+*   **Logistics Tracking**: Sellers can update logistics statuses and tracking numbers.
 
-### 12. Community & Engagement
-- **Live Polls**: Real-time policy testing and feedback loops.
-- **Meet & Greet**: RSVP system for state and CDS events.
+### 5. Financial Operating System (`/api/finance` & `/api/credit`)
+*   **Digital Wallet**: Every corp member gets an integrated digital wallet.
+*   **Transfers & Bills**: Peer-to-peer transfers and bill payments.
+*   **Credit/Loans**: Access to micro-loans with structured repayment schedules based on allowance schedules.
 
-### 13. Kopa Academy & Counseling
-- **Structured Training**: Tech, Business, and Entrepreneurship courses/webinars.
-- **Counseling Portal**: Career, Relationship, and Mental Health session booking.
+### 6. Accommodation & Housing (`/api/accommodation`)
+*   **PPA Housing**: Find and list accommodations near your Place of Primary Assignment (PPA).
+*   **Roommate Matching**: Filter listings specifically for corps members looking for roommates.
 
-### 🏠 3. Accommodation & Relocation
-- **Roommate Finder**: Match with other verified corps members based on location and preferences.
-- **Housing Marketplace**: Browse verified landlord listings and secure apartments via escrow.
-- **Rent Escrow**: Pay your rent through Safetrade to ensure your money is only released when you move in.
+### 7. Career & Kopa Academy (`/api/career`)
+*   **Job Board**: Discover job opportunities tailored for post-service employment.
+*   **Skills Training**: Access Kopa Academy courses and webinars.
+*   **Professional Counseling**: Book 1-on-1 career, relationship, and mental health counseling sessions.
 
-### 🛒 4. Marketplace & Declutter
-- **Corps-owned Businesses**: Support fellow corpers by buying from their businesses.
-- **Declutter Section**: Sell your used items (beds, fans, etc.) easily to incoming members.
-- **Safetrade (Escrow)**: Our proprietary engine that holds payments until delivery is confirmed by the buyer.
+### 8. Welfare & Health (`/api/welfare` & `/api/insurance`)
+*   **Welfare Fund**: A transparent community fund for medical emergencies and support.
+*   **HMO & Insurance**: Submit and track medical claims via partner HMO networks.
 
-### 🧑💼 5. NYSC Admin Dashboard
-- **Broadcast System**: Real-time announcements from NYSC officials to specific States or LGAs.
-- **Welfare Monitoring**: Track and support corps welfare issues through a centralized dashboard.
-- **Digital Transformation**: Automating verification and communication for thousands of members.
+## 🛡️ Architecture & Technical Stack
 
----
+*   **Framework**: [NestJS](https://nestjs.com/) (TypeScript)
+*   **Database**: MongoDB via Mongoose
+*   **Security**: JWT (Passport Strategy), Role-based Guards, Class Validators
+*   **Performance**: Standardized API pagination applied to all data-heavy endpoints (`Community`, `Marketplace`, `Accommodation`, `Career`).
+*   **Media**: Configured `Multer` with `UploadsModule` to handle secure image and document uploads, stored in `/public/uploads`.
+*   **Documentation**: Interactive Swagger API Docs automatically generated at `/api/docs`.
 
-## 🛠 Technical Walkthrough
+## 📖 User Manual / Integration Guide for Frontend
 
-### Getting Started
+### 1. Registration & Authentication
+*   **Step 1:** Call `POST /api/auth/register` with `callUpNumber` and `stateCode`.
+*   **Step 2:** The API will return a `user` object and an `accessToken`.
+*   **Step 3:** Store the `accessToken` securely (e.g., in HttpOnly cookies or local storage).
+*   **Step 4:** For all subsequent requests, include the token in the headers:
+    ```http
+    Authorization: Bearer <your_access_token>
+    ```
 
-1. **Clone the repository**:
-   ```bash
-   git clone <repo-url>
-   cd kopa-we-api
-   ```
+### 2. Standardized Pagination
+All listing endpoints (Feeds, Jobs, Accommodations, Marketplace) use standardized pagination.
+*   **Query Params**: `?page=1&limit=20`
+*   **Response Format**:
+    ```json
+    {
+      "data": [ ...items... ],
+      "meta": {
+        "total": 150,
+        "page": 1,
+        "lastPage": 8,
+        "limit": 20
+      }
+    }
+    ```
 
-2. **Setup Environment**:
-   Create a `.env` file based on the provided template:
-   ```env
-   PORT=3000
-   MONGODB_URI=
-   JWT_SECRET=
-   ```
-
-3. **Install Dependencies**:
-   ```bash
-   npm install
-   ```
-
-4. **Run the Application**:
-   ```bash
-   npm run start:dev
-   ```
-
-### API Documentation (Swagger)
-The interactive API documentation is available at:
-👉 `http://localhost:3000/api/docs`
-
----
+### 3. File Uploads
+To upload profile pictures, marketplace items, or documents:
+*   **Endpoint**: `POST /api/uploads`
+*   **Body Type**: `multipart/form-data`
+*   **Field Name**: `file`
+*   **Response**: Returns the relative URL `{"url": "/uploads/123456789.png"}` which can be saved to the database.
 
 ## 🧪 Testing
 
-We use Jest for unit and end-to-end testing.
-
-- **Run E2E Tests**:
-  ```bash
-  npm run test:e2e
-  ```
-- **Run Unit Tests**:
-  ```bash
-  npm run test
-  ```
-
----
-
-## 🛡 Security & Compliance
-- **Data Privacy**: Fully compliant with NDPC regulations.
-- **Escrow Enforcement**: All marketplace transactions are protected by Safetrade.
-- **Verification**: Mandatory NYSC identity check for all financial operations.
-
----
-
-Built with ❤️ by **Qreva Team** for the **National Youth Service Corps**.
+The API features comprehensive test coverage:
+*   **Unit Tests**: Validates individual module logic and service layers (`npm run test`).
+*   **End-to-End Tests**: Simulates full request lifecycles against the database (`npm run test:e2e`).

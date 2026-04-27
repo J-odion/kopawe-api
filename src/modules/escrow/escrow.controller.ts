@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Param, Patch } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiProperty } from '@nestjs/swagger';
+import { Controller, Post, Body, Param, Patch, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiBearerAuth } from '@nestjs/swagger';
 import { EscrowService } from './escrow.service';
 import { EscrowTransaction } from '../marketplace/schemas/marketplace.schema';
 import { IsString, IsNumber } from 'class-validator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 class CreateEscrowDto {
   @ApiProperty({ 
@@ -28,14 +30,16 @@ class CreateEscrowDto {
 }
 
 @ApiTags('Safetrade (Escrow)')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('safetrade')
 export class EscrowController {
   constructor(private readonly escrowService: EscrowService) {}
 
-  @Post('initiate/:buyerId')
+  @Post('initiate')
   @ApiOperation({ summary: 'Initiate a Safetrade escrow transaction' })
   @ApiResponse({ status: 201, description: 'Escrow initiated', type: EscrowTransaction })
-  async initiate(@Param('buyerId') buyerId: string, @Body() dto: CreateEscrowDto) {
+  async initiate(@CurrentUser('id') buyerId: string, @Body() dto: CreateEscrowDto) {
     return this.escrowService.createEscrow(buyerId, dto.sellerId, dto.productId, dto.amount);
   }
 

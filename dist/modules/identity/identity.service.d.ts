@@ -10,6 +10,7 @@ export declare class IdentityService {
         qrCode: string;
     }>;
     getProfile(id: string): Promise<Member>;
+    getProfileByCallUpNumber(callUpNumber: string): Promise<Member | null>;
     checkFraud(memberId: string): Promise<{
         isSuspicious: boolean;
         reason?: string;

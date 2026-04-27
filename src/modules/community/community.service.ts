@@ -31,17 +31,39 @@ export class CommunityService {
     return post.save();
   }
 
-  async getFeed(state?: string, category?: string, lga?: string): Promise<CommunityPost[]> {
+  async getFeed(
+    state?: string,
+    category?: string,
+    lga?: string,
+    page: number = 1,
+    limit: number = 20,
+  ): Promise<{ data: CommunityPost[]; meta: any }> {
     const query: any = { parentId: null }; // Only top-level posts
     if (state) query.state = state;
     if (lga) query.lga = lga;
     if (category) query.category = category;
 
-    return this.postModel
-      .find(query)
-      .populate('authorId', 'fullName stateCode isVerified')
-      .sort({ createdAt: -1 })
-      .exec();
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.postModel
+        .find(query)
+        .populate('authorId', 'fullName stateCode isVerified')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
+      this.postModel.countDocuments(query),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        lastPage: Math.ceil(total / limit),
+        limit,
+      },
+    };
   }
 
   async getComments(postId: string): Promise<CommunityPost[]> {

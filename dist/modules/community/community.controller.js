@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const community_service_1 = require("./community.service");
 const post_schema_1 = require("./schemas/post.schema");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
 let CommunityController = class CommunityController {
     communityService;
     constructor(communityService) {
@@ -25,8 +27,8 @@ let CommunityController = class CommunityController {
     async create(authorId, data) {
         return this.communityService.createPost(authorId, data);
     }
-    async getFeed(state, category, lga) {
-        return this.communityService.getFeed(state, category, lga);
+    async getFeed(state, category, lga, page = 1, limit = 20) {
+        return this.communityService.getFeed(state, category, lga, page, limit);
     }
     async addComment(postId, authorId, data) {
         return this.communityService.createPost(authorId, { ...data, parentId: postId });
@@ -46,9 +48,9 @@ let CommunityController = class CommunityController {
 };
 exports.CommunityController = CommunityController;
 __decorate([
-    (0, common_1.Post)('post/:authorId'),
+    (0, common_1.Post)('post'),
     (0, swagger_1.ApiOperation)({ summary: 'Create a new post (News, Sports, Religious, etc.)' }),
-    __param(0, (0, common_1.Param)('authorId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
@@ -62,15 +64,17 @@ __decorate([
     __param(0, (0, common_1.Query)('state')),
     __param(1, (0, common_1.Query)('category')),
     __param(2, (0, common_1.Query)('lga')),
+    __param(3, (0, common_1.Query)('page')),
+    __param(4, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:paramtypes", [String, String, String, Number, Number]),
     __metadata("design:returntype", Promise)
 ], CommunityController.prototype, "getFeed", null);
 __decorate([
-    (0, common_1.Post)('comment/:postId/:authorId'),
+    (0, common_1.Post)('comment/:postId'),
     (0, swagger_1.ApiOperation)({ summary: 'Add a comment to a post' }),
     __param(0, (0, common_1.Param)('postId')),
-    __param(1, (0, common_1.Param)('authorId')),
+    __param(1, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, Object]),
@@ -85,10 +89,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CommunityController.prototype, "getComments", null);
 __decorate([
-    (0, common_1.Patch)('upvote/:postId/:memberId'),
+    (0, common_1.Patch)('upvote/:postId'),
     (0, swagger_1.ApiOperation)({ summary: 'Upvote a post' }),
     __param(0, (0, common_1.Param)('postId')),
-    __param(1, (0, common_1.Param)('memberId')),
+    __param(1, (0, current_user_decorator_1.CurrentUser)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
@@ -102,16 +106,18 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CommunityController.prototype, "createPoll", null);
 __decorate([
-    (0, common_1.Post)('rsvp/:eventId/:memberId'),
+    (0, common_1.Post)('rsvp/:eventId'),
     (0, swagger_1.ApiOperation)({ summary: 'RSVP to a Meet & Greet event' }),
     __param(0, (0, common_1.Param)('eventId')),
-    __param(1, (0, common_1.Param)('memberId')),
+    __param(1, (0, current_user_decorator_1.CurrentUser)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], CommunityController.prototype, "rsvp", null);
 exports.CommunityController = CommunityController = __decorate([
     (0, swagger_1.ApiTags)('Community & Social'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('community'),
     __metadata("design:paramtypes", [community_service_1.CommunityService])
 ], CommunityController);

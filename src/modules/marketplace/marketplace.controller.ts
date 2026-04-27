@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Param, Query, Patch } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, Query, Patch, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { MarketplaceService } from './marketplace.service';
 import { Product } from './schemas/marketplace.schema';
 import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 class CreateProductDto {
   @ApiProperty({ example: 'Student Bed Frame' })
@@ -27,10 +29,12 @@ class CreateProductDto {
 export class MarketplaceController {
   constructor(private readonly marketplaceService: MarketplaceService) {}
 
-  @Post('list/:sellerId')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Post('list')
   @ApiOperation({ summary: 'List a new product' })
   @ApiResponse({ status: 201, description: 'Product listed', type: Product })
-  async create(@Param('sellerId') sellerId: string, @Body() dto: CreateProductDto) {
+  async create(@CurrentUser('id') sellerId: string, @Body() dto: CreateProductDto) {
     return this.marketplaceService.createListing(sellerId, dto);
   }
 
@@ -45,9 +49,11 @@ export class MarketplaceController {
     return this.marketplaceService.findAll(query);
   }
 
-  @Get('member/:memberId')
-  @ApiOperation({ summary: 'Get all listings by a specific member' })
-  async findByMember(@Param('memberId') memberId: string) {
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('member')
+  @ApiOperation({ summary: 'Get all listings by the current member' })
+  async findByMember(@CurrentUser('id') memberId: string) {
     return this.marketplaceService.findByMember(memberId);
   }
 
@@ -58,6 +64,8 @@ export class MarketplaceController {
     return this.marketplaceService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Patch('logistics/:id')
   @ApiOperation({ summary: 'Update logistics/delivery status' })
   async updateLogistics(@Param('id') id: string, @Body() dto: { status: string; trackingNumber: string }) {

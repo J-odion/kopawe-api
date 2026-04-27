@@ -18,6 +18,8 @@ const swagger_1 = require("@nestjs/swagger");
 const marketplace_service_1 = require("./marketplace.service");
 const marketplace_schema_1 = require("./schemas/marketplace.schema");
 const class_validator_1 = require("class-validator");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
 class CreateProductDto {
     title;
     description;
@@ -67,10 +69,12 @@ let MarketplaceController = class MarketplaceController {
 };
 exports.MarketplaceController = MarketplaceController;
 __decorate([
-    (0, common_1.Post)('list/:sellerId'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Post)('list'),
     (0, swagger_1.ApiOperation)({ summary: 'List a new product' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Product listed', type: marketplace_schema_1.Product }),
-    __param(0, (0, common_1.Param)('sellerId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, CreateProductDto]),
@@ -90,9 +94,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], MarketplaceController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)('member/:memberId'),
-    (0, swagger_1.ApiOperation)({ summary: 'Get all listings by a specific member' }),
-    __param(0, (0, common_1.Param)('memberId')),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('member'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all listings by the current member' }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
@@ -107,6 +113,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], MarketplaceController.prototype, "findOne", null);
 __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Patch)('logistics/:id'),
     (0, swagger_1.ApiOperation)({ summary: 'Update logistics/delivery status' }),
     __param(0, (0, common_1.Param)('id')),

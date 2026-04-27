@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { AccommodationService } from './accommodation.service';
 import { Accommodation } from './schemas/accommodation.schema';
 import { IsString, IsNumber, IsBoolean, IsOptional } from 'class-validator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 class CreateAccommodationDto {
   @ApiProperty({ example: '2 Bedroom Flat near Camp' })
@@ -27,10 +29,12 @@ class CreateAccommodationDto {
 export class AccommodationController {
   constructor(private readonly accommodationService: AccommodationService) {}
 
-  @Post('list/:ownerId')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Post('list')
   @ApiOperation({ summary: 'List a new accommodation' })
   @ApiResponse({ status: 201, description: 'Accommodation listed', type: Accommodation })
-  async create(@Param('ownerId') ownerId: string, @Body() dto: CreateAccommodationDto) {
+  async create(@CurrentUser('id') ownerId: string, @Body() dto: CreateAccommodationDto) {
     return this.accommodationService.createListing(ownerId, dto);
   }
 
@@ -45,9 +49,11 @@ export class AccommodationController {
     return this.accommodationService.findAll(query);
   }
 
-  @Get('member/:memberId')
-  @ApiOperation({ summary: 'Get all accommodations listed by a member' })
-  async findByMember(@Param('memberId') memberId: string) {
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('member')
+  @ApiOperation({ summary: 'Get all accommodations listed by the current member' })
+  async findByMember(@CurrentUser('id') memberId: string) {
     return this.accommodationService.findByMember(memberId);
   }
 

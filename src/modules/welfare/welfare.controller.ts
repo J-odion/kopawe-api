@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiProperty } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiBearerAuth } from '@nestjs/swagger';
 import { WelfareService } from './welfare.service';
 import { WelfareFund, WelfareRequest } from './schemas/welfare.schema';
 import { IsNumber, IsString } from 'class-validator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 class CreateWelfareRequestDto {
   @ApiProperty({ example: 10000 })
@@ -15,6 +17,8 @@ class CreateWelfareRequestDto {
 }
 
 @ApiTags('Welfare Fund')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('welfare')
 export class WelfareController {
   constructor(private readonly welfareService: WelfareService) {}
@@ -26,10 +30,10 @@ export class WelfareController {
     return this.welfareService.getFundStatus();
   }
 
-  @Post('request/:memberId')
+  @Post('request')
   @ApiOperation({ summary: 'Request financial support from the Welfare Fund' })
   @ApiResponse({ status: 201, type: WelfareRequest })
-  async createRequest(@Param('memberId') memberId: string, @Body() dto: CreateWelfareRequestDto) {
+  async createRequest(@CurrentUser('id') memberId: string, @Body() dto: CreateWelfareRequestDto) {
     return this.welfareService.createRequest(memberId, dto.amount, dto.reason);
   }
 }

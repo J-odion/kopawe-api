@@ -20,6 +20,8 @@ const ledger_service_1 = require("./ledger.service");
 const finance_schema_1 = require("./schemas/finance.schema");
 const ledger_schema_1 = require("./schemas/ledger.schema");
 const class_validator_1 = require("class-validator");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
 class RequestLoanDto {
     amount;
     purpose;
@@ -100,72 +102,74 @@ let FinanceController = class FinanceController {
 };
 exports.FinanceController = FinanceController;
 __decorate([
-    (0, common_1.Get)('wallet/:memberId'),
-    (0, swagger_1.ApiOperation)({ summary: 'Get member wallet' }),
+    (0, common_1.Get)('wallet'),
+    (0, swagger_1.ApiOperation)({ summary: 'Get current member wallet' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Wallet retrieved', type: finance_schema_1.Wallet }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], FinanceController.prototype, "getWallet", null);
 __decorate([
-    (0, common_1.Post)('transfer/:memberId'),
+    (0, common_1.Post)('transfer'),
     (0, swagger_1.ApiOperation)({ summary: 'P2P Transfer between members' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Transfer successful' }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, TransferDto]),
     __metadata("design:returntype", Promise)
 ], FinanceController.prototype, "transfer", null);
 __decorate([
-    (0, common_1.Post)('savings/:memberId'),
+    (0, common_1.Post)('savings'),
     (0, swagger_1.ApiOperation)({ summary: 'Move funds to savings' }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], FinanceController.prototype, "toSavings", null);
 __decorate([
-    (0, common_1.Patch)('lock/:memberId'),
+    (0, common_1.Patch)('lock'),
     (0, swagger_1.ApiOperation)({ summary: 'Lock/Unlock member wallet' }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], FinanceController.prototype, "toggleLock", null);
 __decorate([
-    (0, common_1.Post)('loan/request/:memberId'),
+    (0, common_1.Post)('loan/request'),
     (0, swagger_1.ApiOperation)({ summary: 'Request Allawee Advance loan' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Loan approved and disbursed', type: finance_schema_1.Loan }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, RequestLoanDto]),
     __metadata("design:returntype", Promise)
 ], FinanceController.prototype, "requestLoan", null);
 __decorate([
-    (0, common_1.Get)('loans/:memberId'),
+    (0, common_1.Get)('loans'),
     (0, swagger_1.ApiOperation)({ summary: 'Get member loans' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Loans retrieved', type: [finance_schema_1.Loan] }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], FinanceController.prototype, "getLoans", null);
 __decorate([
-    (0, common_1.Get)('ledger/:memberId'),
+    (0, common_1.Get)('ledger'),
     (0, swagger_1.ApiOperation)({ summary: 'Get audit ledger for member' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Ledger retrieved', type: [ledger_schema_1.LedgerEntry] }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], FinanceController.prototype, "getLedger", null);
 exports.FinanceController = FinanceController = __decorate([
     (0, swagger_1.ApiTags)('Finance'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('finance'),
     __metadata("design:paramtypes", [finance_service_1.FinanceService,
         ledger_service_1.LedgerService])

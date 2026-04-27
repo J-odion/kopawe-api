@@ -66,6 +66,10 @@ export class IdentityService {
     return member;
   }
 
+  async getProfileByCallUpNumber(callUpNumber: string): Promise<Member | null> {
+    return this.memberModel.findOne({ callUpNumber }).exec();
+  }
+
   async checkFraud(memberId: string): Promise<{ isSuspicious: boolean; reason?: string }> {
     const member = await this.getProfile(memberId);
     // Basic logic: if credit score is unusually high for a new member

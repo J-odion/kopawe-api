@@ -18,6 +18,8 @@ const swagger_1 = require("@nestjs/swagger");
 const admin_service_1 = require("./admin.service");
 const announcement_schema_1 = require("./schemas/announcement.schema");
 const class_validator_1 = require("class-validator");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const current_user_decorator_1 = require("../auth/decorators/current-user.decorator");
 class CreateAnnouncementDto {
     title;
     content;
@@ -101,9 +103,9 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "getStats", null);
 __decorate([
-    (0, common_1.Post)('tickets/:memberId'),
+    (0, common_1.Post)('tickets'),
     (0, swagger_1.ApiOperation)({ summary: 'Create a new support ticket/complaint' }),
-    __param(0, (0, common_1.Param)('memberId')),
+    __param(0, (0, current_user_decorator_1.CurrentUser)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
@@ -125,6 +127,8 @@ __decorate([
 ], AdminController.prototype, "getEngagementStats", null);
 exports.AdminController = AdminController = __decorate([
     (0, swagger_1.ApiTags)('NYSC Admin'),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('admin'),
     __metadata("design:paramtypes", [admin_service_1.AdminService])
 ], AdminController);

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { IdentityModule } from './modules/identity/identity.module';
@@ -16,11 +18,16 @@ import { CreditModule } from './modules/credit/credit.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { WelfareModule } from './modules/welfare/welfare.module';
 import { CommunityModule } from './modules/community/community.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/',
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -42,6 +49,7 @@ import { CommunityModule } from './modules/community/community.module';
     ChatModule,
     WelfareModule,
     CommunityModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

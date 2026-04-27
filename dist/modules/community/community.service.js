@@ -43,7 +43,7 @@ let CommunityService = class CommunityService {
         });
         return post.save();
     }
-    async getFeed(state, category, lga) {
+    async getFeed(state, category, lga, page = 1, limit = 20) {
         const query = { parentId: null };
         if (state)
             query.state = state;
@@ -51,11 +51,26 @@ let CommunityService = class CommunityService {
             query.lga = lga;
         if (category)
             query.category = category;
-        return this.postModel
-            .find(query)
-            .populate('authorId', 'fullName stateCode isVerified')
-            .sort({ createdAt: -1 })
-            .exec();
+        const skip = (page - 1) * limit;
+        const [data, total] = await Promise.all([
+            this.postModel
+                .find(query)
+                .populate('authorId', 'fullName stateCode isVerified')
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .exec(),
+            this.postModel.countDocuments(query),
+        ]);
+        return {
+            data,
+            meta: {
+                total,
+                page,
+                lastPage: Math.ceil(total / limit),
+                limit,
+            },
+        };
     }
     async getComments(postId) {
         return this.postModel

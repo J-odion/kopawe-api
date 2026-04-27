@@ -10,7 +10,10 @@ export declare class AccommodationController {
     private readonly accommodationService;
     constructor(accommodationService: AccommodationService);
     create(ownerId: string, dto: CreateAccommodationDto): Promise<Accommodation>;
-    findAll(query: any): Promise<Accommodation[]>;
+    findAll(query: any): Promise<{
+        data: Accommodation[];
+        meta: any;
+    }>;
     findByMember(memberId: string): Promise<Accommodation[]>;
     findRoommates(location: string): Promise<Accommodation[]>;
 }

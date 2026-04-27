@@ -30,7 +30,7 @@ let AccommodationService = class AccommodationService {
         return listing.save();
     }
     async findAll(query) {
-        const { search, minPrice, maxPrice, roommateWanted, ...rest } = query;
+        const { search, minPrice, maxPrice, roommateWanted, page = 1, limit = 20, ...rest } = query;
         const filter = { ...rest };
         if (search) {
             filter.$or = [
@@ -48,7 +48,20 @@ let AccommodationService = class AccommodationService {
             if (maxPrice)
                 filter.price.$lte = Number(maxPrice);
         }
-        return this.accommodationModel.find(filter).exec();
+        const skip = (Number(page) - 1) * Number(limit);
+        const [data, total] = await Promise.all([
+            this.accommodationModel.find(filter).skip(skip).limit(Number(limit)).exec(),
+            this.accommodationModel.countDocuments(filter),
+        ]);
+        return {
+            data,
+            meta: {
+                total,
+                page: Number(page),
+                lastPage: Math.ceil(total / Number(limit)),
+                limit: Number(limit),
+            },
+        };
     }
     async findByMember(memberId) {
         return this.accommodationModel.find({ ownerId: new mongoose_2.Types.ObjectId(memberId) }).exec();

@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiProperty } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, Patch, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiProperty, ApiBearerAuth } from '@nestjs/swagger';
 import { FinanceService } from './finance.service';
 import { LedgerService } from './ledger.service';
 import { Wallet, Loan } from './schemas/finance.schema';
 import { LedgerEntry, TransactionType } from './schemas/ledger.schema';
 import { IsNumber, IsString } from 'class-validator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 class RequestLoanDto {
   @ApiProperty({ 
@@ -46,6 +48,8 @@ class TransferDto {
 }
 
 @ApiTags('Finance')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('finance')
 export class FinanceController {
   constructor(
@@ -53,17 +57,17 @@ export class FinanceController {
     private readonly ledgerService: LedgerService,
   ) {}
 
-  @Get('wallet/:memberId')
-  @ApiOperation({ summary: 'Get member wallet' })
+  @Get('wallet')
+  @ApiOperation({ summary: 'Get current member wallet' })
   @ApiResponse({ status: 200, description: 'Wallet retrieved', type: Wallet })
-  async getWallet(@Param('memberId') memberId: string) {
+  async getWallet(@CurrentUser('id') memberId: string) {
     return this.financeService.getWallet(memberId);
   }
 
-  @Post('transfer/:memberId')
+  @Post('transfer')
   @ApiOperation({ summary: 'P2P Transfer between members' })
   @ApiResponse({ status: 201, description: 'Transfer successful' })
-  async transfer(@Param('memberId') fromMemberId: string, @Body() dto: TransferDto) {
+  async transfer(@CurrentUser('id') fromMemberId: string, @Body() dto: TransferDto) {
     return this.ledgerService.executeTransfer(
       fromMemberId,
       dto.toMemberId,
@@ -73,36 +77,36 @@ export class FinanceController {
     );
   }
 
-  @Post('savings/:memberId')
+  @Post('savings')
   @ApiOperation({ summary: 'Move funds to savings' })
-  async toSavings(@Param('memberId') id: string, @Body() dto: { amount: number; isGroup?: boolean }) {
+  async toSavings(@CurrentUser('id') id: string, @Body() dto: { amount: number; isGroup?: boolean }) {
     return this.financeService.moveFundsToSavings(id, dto.amount, dto.isGroup);
   }
 
-  @Patch('lock/:memberId')
+  @Patch('lock')
   @ApiOperation({ summary: 'Lock/Unlock member wallet' })
-  async toggleLock(@Param('memberId') id: string, @Body() dto: { isLocked: boolean }) {
+  async toggleLock(@CurrentUser('id') id: string, @Body() dto: { isLocked: boolean }) {
     return this.financeService.toggleWalletLock(id, dto.isLocked);
   }
 
-  @Post('loan/request/:memberId')
+  @Post('loan/request')
   @ApiOperation({ summary: 'Request Allawee Advance loan' })
   @ApiResponse({ status: 201, description: 'Loan approved and disbursed', type: Loan })
-  async requestLoan(@Param('memberId') memberId: string, @Body() requestLoanDto: RequestLoanDto) {
+  async requestLoan(@CurrentUser('id') memberId: string, @Body() requestLoanDto: RequestLoanDto) {
     return this.financeService.requestLoan(memberId, requestLoanDto.amount, requestLoanDto.purpose);
   }
 
-  @Get('loans/:memberId')
+  @Get('loans')
   @ApiOperation({ summary: 'Get member loans' })
   @ApiResponse({ status: 200, description: 'Loans retrieved', type: [Loan] })
-  async getLoans(@Param('memberId') memberId: string) {
+  async getLoans(@CurrentUser('id') memberId: string) {
     return this.financeService.getLoans(memberId);
   }
 
-  @Get('ledger/:memberId')
+  @Get('ledger')
   @ApiOperation({ summary: 'Get audit ledger for member' })
   @ApiResponse({ status: 200, description: 'Ledger retrieved', type: [LedgerEntry] })
-  async getLedger(@Param('memberId') memberId: string) {
+  async getLedger(@CurrentUser('id') memberId: string) {
     return this.ledgerService.getLedger(memberId);
   }
 }

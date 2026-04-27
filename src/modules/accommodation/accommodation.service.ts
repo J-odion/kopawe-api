@@ -15,8 +15,8 @@ export class AccommodationService {
     return listing.save();
   }
 
-  async findAll(query: any): Promise<Accommodation[]> {
-    const { search, minPrice, maxPrice, roommateWanted, ...rest } = query;
+  async findAll(query: any): Promise<{ data: Accommodation[]; meta: any }> {
+    const { search, minPrice, maxPrice, roommateWanted, page = 1, limit = 20, ...rest } = query;
     const filter: any = { ...rest };
 
     if (search) {
@@ -36,7 +36,21 @@ export class AccommodationService {
       if (maxPrice) filter.price.$lte = Number(maxPrice);
     }
 
-    return this.accommodationModel.find(filter).exec();
+    const skip = (Number(page) - 1) * Number(limit);
+    const [data, total] = await Promise.all([
+      this.accommodationModel.find(filter).skip(skip).limit(Number(limit)).exec(),
+      this.accommodationModel.countDocuments(filter),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page: Number(page),
+        lastPage: Math.ceil(total / Number(limit)),
+        limit: Number(limit),
+      },
+    };
   }
 
   async findByMember(memberId: string): Promise<Accommodation[]> {

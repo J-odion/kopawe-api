@@ -30,7 +30,7 @@ let MarketplaceService = class MarketplaceService {
         return product.save();
     }
     async findAll(query) {
-        const { search, category, minPrice, maxPrice, ...rest } = query;
+        const { search, category, minPrice, maxPrice, page = 1, limit = 20, ...rest } = query;
         const filter = { status: 'AVAILABLE', ...rest };
         if (search) {
             filter.$or = [
@@ -47,7 +47,20 @@ let MarketplaceService = class MarketplaceService {
             if (maxPrice)
                 filter.price.$lte = Number(maxPrice);
         }
-        return this.productModel.find(filter).exec();
+        const skip = (Number(page) - 1) * Number(limit);
+        const [data, total] = await Promise.all([
+            this.productModel.find(filter).skip(skip).limit(Number(limit)).exec(),
+            this.productModel.countDocuments(filter),
+        ]);
+        return {
+            data,
+            meta: {
+                total,
+                page: Number(page),
+                lastPage: Math.ceil(total / Number(limit)),
+                limit: Number(limit),
+            },
+        };
     }
     async findByMember(memberId) {
         return this.productModel.find({ sellerId: new mongoose_2.Types.ObjectId(memberId) }).exec();

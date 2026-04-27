@@ -102,6 +102,9 @@ let IdentityService = class IdentityService {
             throw new common_1.NotFoundException('Member not found');
         return member;
     }
+    async getProfileByCallUpNumber(callUpNumber) {
+        return this.memberModel.findOne({ callUpNumber }).exec();
+    }
     async checkFraud(memberId) {
         const member = await this.getProfile(memberId);
         if (member.creditScore > 800 && !member.isVerified) {

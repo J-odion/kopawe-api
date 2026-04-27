@@ -51,7 +51,16 @@ export declare const CommunityPostSchema: import("mongoose").Schema<CommunityPos
     }, "id"> & {
         id: string;
     }> | undefined;
-    authorId?: import("mongoose").SchemaDefinitionProperty<Types.ObjectId, CommunityPost, Document<unknown, {}, CommunityPost, {
+    state?: import("mongoose").SchemaDefinitionProperty<string, CommunityPost, Document<unknown, {}, CommunityPost, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<CommunityPost & Required<{
+        _id: Types.ObjectId;
+    }> & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    lga?: import("mongoose").SchemaDefinitionProperty<string, CommunityPost, Document<unknown, {}, CommunityPost, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<CommunityPost & Required<{
         _id: Types.ObjectId;
@@ -78,25 +87,16 @@ export declare const CommunityPostSchema: import("mongoose").Schema<CommunityPos
     }, "id"> & {
         id: string;
     }> | undefined;
-    state?: import("mongoose").SchemaDefinitionProperty<string, CommunityPost, Document<unknown, {}, CommunityPost, {
-        id: string;
-    }, import("mongoose").DefaultSchemaOptions> & Omit<CommunityPost & Required<{
-        _id: Types.ObjectId;
-    }> & {
-        __v: number;
-    }, "id"> & {
-        id: string;
-    }> | undefined;
-    lga?: import("mongoose").SchemaDefinitionProperty<string, CommunityPost, Document<unknown, {}, CommunityPost, {
-        id: string;
-    }, import("mongoose").DefaultSchemaOptions> & Omit<CommunityPost & Required<{
-        _id: Types.ObjectId;
-    }> & {
-        __v: number;
-    }, "id"> & {
-        id: string;
-    }> | undefined;
     images?: import("mongoose").SchemaDefinitionProperty<string[], CommunityPost, Document<unknown, {}, CommunityPost, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<CommunityPost & Required<{
+        _id: Types.ObjectId;
+    }> & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    authorId?: import("mongoose").SchemaDefinitionProperty<Types.ObjectId, CommunityPost, Document<unknown, {}, CommunityPost, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<CommunityPost & Required<{
         _id: Types.ObjectId;
@@ -166,7 +166,7 @@ export declare const PollSchema: import("mongoose").Schema<Poll, import("mongoos
     }, "id"> & {
         id: string;
     }> | undefined;
-    question?: import("mongoose").SchemaDefinitionProperty<string, Poll, Document<unknown, {}, Poll, {
+    options?: import("mongoose").SchemaDefinitionProperty<string[], Poll, Document<unknown, {}, Poll, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Poll & Required<{
         _id: Types.ObjectId;
@@ -175,7 +175,7 @@ export declare const PollSchema: import("mongoose").Schema<Poll, import("mongoos
     }, "id"> & {
         id: string;
     }> | undefined;
-    options?: import("mongoose").SchemaDefinitionProperty<string[], Poll, Document<unknown, {}, Poll, {
+    question?: import("mongoose").SchemaDefinitionProperty<string, Poll, Document<unknown, {}, Poll, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Poll & Required<{
         _id: Types.ObjectId;
